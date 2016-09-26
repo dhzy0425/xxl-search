@@ -47,13 +47,21 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 
 
 ### 二、用例演示
-示例以一个完整的 "搜索列表页" 应用展开，可以覆盖大部分搜索列表开发需求。搜索列表需求互联网互联网公司非常常见, 如 "淘宝的商品搜索列表页"、"京东的商户搜索列表页" 和 "安居客的房产搜索列表页" 等;
-
 ##### 源码目录介绍
 
     - /xxl-search-client    : "xxl-search-example" 依赖的搜索核心包, 内置lucene、elasticsearch 两种搜索实现方案;
+    - /xxl-search-example   : "搜索列表页" 演示项目, 基于 "xxl-search-client" 实现;
     - /xxl-search-embed     : "搜索小程序" 项目, 基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
-    - /xxl-search-example   : "搜索列表页" 应用 example 项目, 基于 "xxl-search-client" 实现;
+
+主要包括下面两个项目:
+
+- 1、"搜索列表页" 演示项目 ("xxl-search-client" 和 "xxl-search-example" 组成);
+
+>示例以一个完整的 "搜索列表页" 应用展开，可以覆盖大部分搜索列表开发需求。搜索列表需求互联网互联网公司非常常见, 如 "淘宝的商品搜索列表页"、"京东的商户搜索列表页" 和 "安居客的房产搜索列表页" 等;
+
+- 1、"搜索小程序" 项目 ("xxl-search-embed" 组成);
+
+>基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
 
 ##### "搜索列表页" 演示
 
