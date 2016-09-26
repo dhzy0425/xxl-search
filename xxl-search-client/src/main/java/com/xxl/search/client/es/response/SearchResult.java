@@ -1,4 +1,4 @@
-package com.xxl.search.client.common;
+package com.xxl.search.client.es.response;
 
 import java.util.List;
 import java.util.Map;

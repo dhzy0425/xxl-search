@@ -1,4 +1,4 @@
-package com.xxl.search.client.lucene;
+package com.xxl.search.client.lucene.response;
 
 import org.apache.lucene.document.Document;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by xuxueli on 16/9/19.
  */
-public class LuceneSearchResult {
+public class SearchResult {
 
     private int totalHits;
     private List<Document> documents;

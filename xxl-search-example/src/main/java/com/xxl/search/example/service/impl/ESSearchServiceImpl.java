@@ -1,6 +1,6 @@
 package com.xxl.search.example.service.impl;
 
-import com.xxl.search.client.common.SearchResult;
+import com.xxl.search.client.es.response.SearchResult;
 import com.xxl.search.client.es.ElasticsearchUtil;
 import com.xxl.search.example.core.model.ShopDTO;
 import com.xxl.search.example.service.IXxlSearchService;

@@ -1,6 +1,7 @@
 package com.xxl.search.client.lucene;
 
-import com.xxl.search.client.es.JacksonUtil;
+import com.xxl.search.client.lucene.response.SearchResult;
+import com.xxl.search.client.util.PropertiesUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Lucene工具类 (文章标题/内容,分词索引)
@@ -86,8 +88,6 @@ public class LuceneUtil {
 	}
 
 
-	// index path
-	public static final String INDEX_DIRECTORY = "/Users/xuxueli/Downloads/tmp/LuceneUtil";
 
 	private static Directory directory = null;
 	private static IndexWriter indexWriter = null;
@@ -96,12 +96,19 @@ public class LuceneUtil {
 	private static void init() {
 		if (indexWriter==null || searcherManager==null) {
 			try {
-				directory = new SimpleFSDirectory(Paths.get(INDEX_DIRECTORY));
+				// load directory path
+				Properties properties = PropertiesUtil.loadProperties(PropertiesUtil.DEFAULT_CONFIG);
+				String luceneDirectory = PropertiesUtil.getString(properties, "lucene.directory");
 
+				// directory
+				directory = new SimpleFSDirectory(Paths.get(luceneDirectory));
+
+				// IndexWriter
 				Analyzer analyzer = new SmartChineseAnalyzer();
 				IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 				indexWriter = new IndexWriter(directory, indexWriterConfig);
 
+				// SearcherManager
 				searcherManager = new SearcherManager(indexWriter, false, new SearcherFactory());
 				TrackingIndexWriter trackingIndexWriter = new TrackingIndexWriter(indexWriter);
 				ControlledRealTimeReopenThread controlledRealTimeReopenThread = new ControlledRealTimeReopenThread<IndexSearcher>(trackingIndexWriter, searcherManager, 5.0, 0.025);
@@ -121,6 +128,9 @@ public class LuceneUtil {
 			}
 			if (directory!=null) {
 				directory.close();
+			}
+			if (searcherManager!=null) {
+				searcherManager.close();
 			}
 		} catch (IOException e) {
 			logger.error("", e);
@@ -209,8 +219,8 @@ public class LuceneUtil {
 	 * 索引查询
 	 * @throws Exception
 	 */
-	public static LuceneSearchResult search(List<Query> queries, Sort sort, int offset, int pagesize) {
-		LuceneSearchResult result = new LuceneSearchResult();
+	public static SearchResult search(List<Query> queries, Sort sort, int offset, int pagesize) {
+		SearchResult result = new SearchResult();
 
 		IndexSearcher indexSearcher = null;
 		try {
@@ -237,7 +247,7 @@ public class LuceneUtil {
 
 			// parse result
 			ScoreDoc[] scoreDocs = topFieldCollector.topDocs(offset, pagesize).scoreDocs;
-			logger.info(">>>>>>>>>>> search result, query:{}, result:{}", queries, JacksonUtil.writeValueAsString(topFieldCollector));
+			logger.info(">>>>>>>>>>> search result, query:{}, result:{}", queries, topFieldCollector);
 
 			result.setTotalHits(topFieldCollector.getTotalHits());
 			if (scoreDocs!=null && scoreDocs.length > 0) {
@@ -321,7 +331,7 @@ public class LuceneUtil {
 		Sort scoreSort = new Sort(new SortField("score", SortField.Type.INT, true));	// INT=按照int值排序
 		Sort hotScoreSort = new Sort(new SortField("hotscore", SortField.Type.INT, true));
 
-		LuceneSearchResult result = search(querys, scoreSort, 0, 20);
+		SearchResult result = search(querys, scoreSort, 0, 20);
 		for (Document item: result.getDocuments()) {
 			System.out.println(item);
 		}

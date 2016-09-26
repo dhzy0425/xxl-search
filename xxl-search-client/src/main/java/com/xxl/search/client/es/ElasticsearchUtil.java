@@ -1,6 +1,7 @@
 package com.xxl.search.client.es;
 
-import com.xxl.search.client.common.SearchResult;
+import com.xxl.search.client.es.response.SearchResult;
+import com.xxl.search.client.util.PropertiesUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -130,15 +131,29 @@ public class ElasticsearchUtil {
     public static TransportClient getInstance(){
     	if (instance==null) {
 			try {
+				// address
+				Properties properties = PropertiesUtil.loadProperties(PropertiesUtil.DEFAULT_CONFIG);
+				String esAddress = PropertiesUtil.getString(properties, "es.address");
+				Set<String> esAddressSet = new HashSet<String>(Arrays.asList(esAddress.split(",")));
+
+				// InetSocketTransportAddress List
+				int i = 0;
+				InetSocketTransportAddress[] transportAddresses = new InetSocketTransportAddress[esAddressSet.size()];
+				for (String address: esAddressSet) {
+					String[] temp = address.split(":");
+					String host = temp[0];
+					int port = Integer.valueOf(temp[1]);
+					transportAddresses[i] = new InetSocketTransportAddress(InetAddress.getByName(host), port);
+				}
+
+				// Settings
 				Settings settings = Settings.settingsBuilder()
 						.put("cluster.name", "xxl-search")		// 设置集群名称：默认是elasticsearch
 						.put("client.transport.sniff", true)	// 客户端嗅探整个集群状态，把集群中的其他机器IP加入到客户端中
 						.build();
 
-				TransportClient transportClient = TransportClient.builder().settings(settings).build();
-				transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
-				//transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("node2-ip"), 9300));
-				instance = transportClient;
+				// TransportClient
+				instance = TransportClient.builder().settings(settings).build().addTransportAddresses(transportAddresses);
 
 			} catch (UnknownHostException e) {
 				logger.error("", e);

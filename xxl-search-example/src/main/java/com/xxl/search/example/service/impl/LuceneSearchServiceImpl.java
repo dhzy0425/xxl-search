@@ -1,6 +1,6 @@
 package com.xxl.search.example.service.impl;
 
-import com.xxl.search.client.lucene.LuceneSearchResult;
+import com.xxl.search.client.lucene.response.SearchResult;
 import com.xxl.search.client.lucene.LuceneUtil;
 import com.xxl.search.example.core.model.ShopDTO;
 import com.xxl.search.example.service.IXxlSearchService;
@@ -130,7 +130,7 @@ public class LuceneSearchServiceImpl implements IXxlSearchService {
 
         // result
         Map<String, Object> retMap = new HashMap();
-        LuceneSearchResult result = LuceneUtil.search(querys, scoreSort, offset, pagesize);
+        SearchResult result = LuceneUtil.search(querys, scoreSort, offset, pagesize);
         retMap.put("total", result.getTotalHits());
         retMap.put("data", result.getDocuments());
         return retMap;
