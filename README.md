@@ -51,9 +51,9 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 
 ##### 源码目录介绍
 
-- /xxl-search-client    : "xxl-search-example" 依赖的搜索核心包, 内置lucene、elasticsearch 两种搜索实现方案;
-- /xxl-search-embed     : "搜索小程序" 项目, 基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
-- /xxl-search-example   : "搜索列表页" 应用 example 项目, 基于 "xxl-search-client" 实现;
+    - /xxl-search-client    : "xxl-search-example" 依赖的搜索核心包, 内置lucene、elasticsearch 两种搜索实现方案;
+    - /xxl-search-embed     : "搜索小程序" 项目, 基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
+    - /xxl-search-example   : "搜索列表页" 应用 example 项目, 基于 "xxl-search-client" 实现;
 
 ##### "搜索列表页" 演示
 
