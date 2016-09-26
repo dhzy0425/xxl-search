@@ -103,13 +103,49 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 
 ##### "搜索小程序" 演示
 
+见项目 "xxl-search-example" 
 
+注意: 分词器使用了 "IKAnalyzer", 需要确保本地maven仓库中已经存在 "IKAnalyzer" 依赖。项目中已经提供了最新版本的 "IKAnalyzer" ,见路径 "xxl-search/xxl-search-embed/src/test/resources/IKAnalyzer-5.3.0.jar"
+
+1、运行进入主界面:
+
+该项目是一个JAR项目, 主方法为: com.xxl.search.embed.Application , 运行可查看主界面如下:
+
+![输入图片说明](https://static.oschina.net/uploads/img/201609/26173905_3DQ1.png "在这里输入图片标题")
+
+2、配置 "索引模板参数", 生成索引模板 :
+
+上图中 "索引模板参数" 输入框中, 可以输入多个参数, 定制索引模板。
+
+多个参数用逗号 "," 分隔, 必须报刊参数 "keywords", 该参数对应的数据将会被索引分词, 可通过下面搜索框搜索;
+
+点击 "生成模板" 按钮, 将会在 "索引生成目录" 输入框对应的目录下, 生成索引模板, 索引模板是一个 excel表格, 如下图所示:
+
+![输入图片说明](https://static.oschina.net/uploads/img/201609/26175347_qtRy.png "在这里输入图片标题")
+
+3、根据索引模板, 填充索引数据 :
+
+![输入图片说明](https://static.oschina.net/uploads/img/201609/26175806_zScc.png "在这里输入图片标题")
+
+4、生成索引文件:
+
+点击 "生成索引文件" 按钮, 将会根据索引模板中的数据, 在 "索引生成目录" 下的 "search_fs" 目录中生成索引文件, 如下图:
+
+![输入图片说明](https://static.oschina.net/uploads/img/201609/26180332_29lq.png "在这里输入图片标题")
+
+5、索引查询:
+
+在最下方的 "搜索" 输入框中输入关键字, 点击右侧的 "搜索" 按钮, 即可在索引文件中进行分词搜索, 关键词和索引模板中的参数 "keywords" 进行分词匹配:
+
+![输入图片说明](https://static.oschina.net/uploads/img/201609/26180345_6mKC.png "在这里输入图片标题")
+
+可通过一下命令, 将项目打包成JAR包:
 ```
 // package jar witch lib
 mvn dependency:copy-dependencies -DoutputDirectory=lib   -DincludeScope=compile
 ```
 
-### 三、用例演示
+### 三、技术实现
 
 ## 四、历史版本
 #### 1.2 特性
