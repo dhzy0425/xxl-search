@@ -1,6 +1,7 @@
 package com.xxl.search.example.controller;
 
 import com.xxl.search.client.lucene.LuceneUtil;
+import com.xxl.search.client.util.PropertiesUtil;
 import com.xxl.search.example.core.model.ShopDTO;
 import com.xxl.search.example.service.IXxlSearchService;
 import org.apache.logging.log4j.LogManager;
@@ -28,8 +29,21 @@ public class DemoController {
     private IXxlSearchService eSSearchServiceImpl;
 
     public IXxlSearchService getXxlSearchService(){
-        return luceneSearchServiceImpl;
-        //return eSSearchServiceImpl;
+        // type : ES、LUCENE
+        Properties properties = PropertiesUtil.loadProperties(PropertiesUtil.DEFAULT_CONFIG);
+        String type = PropertiesUtil.getString(properties, "xxl.search.type");
+
+        if ("ES".equals(type)) {
+            return eSSearchServiceImpl;
+        } else {
+            return luceneSearchServiceImpl;
+        }
+    }
+
+    public static void main(String[] args) {
+        Properties properties = PropertiesUtil.loadProperties(PropertiesUtil.DEFAULT_CONFIG);
+        String type = PropertiesUtil.getString(properties, "xxl.search.type");
+        System.out.println(type);
     }
 
     // ---------------------- 原始数据, 索引操作 ----------------------
