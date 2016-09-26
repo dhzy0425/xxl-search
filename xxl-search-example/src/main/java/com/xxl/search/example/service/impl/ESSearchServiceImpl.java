@@ -1,6 +1,6 @@
 package com.xxl.search.example.service.impl;
 
-import com.xxl.search.client.es.ElasticsearchResult;
+import com.xxl.search.client.common.SearchResult;
 import com.xxl.search.client.es.ElasticsearchUtil;
 import com.xxl.search.client.es.JacksonUtil;
 import com.xxl.search.example.core.model.ShopDTO;
@@ -97,11 +97,11 @@ public class ESSearchServiceImpl implements IXxlSearchService {
         }
 
         // result
-        ElasticsearchResult elasticsearchResult = ElasticsearchUtil.prepareSearch(index, type, queryBuilders, sort, offset, pagesize);
+        SearchResult searchResult = ElasticsearchUtil.prepareSearch(index, type, queryBuilders, sort, offset, pagesize);
 
         Map<String, Object> retMap = new HashMap();
-        retMap.put("total", elasticsearchResult.getTotalHits());
-        retMap.put("data", elasticsearchResult.getSources());
+        retMap.put("total", searchResult.getTotal());
+        retMap.put("data", searchResult.getData());
         return retMap;
     }
 }

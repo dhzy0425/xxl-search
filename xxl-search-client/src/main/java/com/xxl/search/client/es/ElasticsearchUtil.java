@@ -1,5 +1,6 @@
 package com.xxl.search.client.es;
 
+import com.xxl.search.client.common.SearchResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -133,8 +134,12 @@ public class ElasticsearchUtil {
 						.put("cluster.name", "xxl-search")		// 设置集群名称：默认是elasticsearch
 						.put("client.transport.sniff", true)	// 客户端嗅探整个集群状态，把集群中的其他机器IP加入到客户端中
 						.build();
-				instance = TransportClient.builder().settings(settings).build()
-						.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
+
+				TransportClient transportClient = TransportClient.builder().settings(settings).build();
+				transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
+				//transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("node2-ip"), 9300));
+				instance = transportClient;
+
 			} catch (UnknownHostException e) {
 				logger.error("", e);
 				if (instance!=null) {
@@ -263,7 +268,7 @@ public class ElasticsearchUtil {
 	 * @param pagesize
      * @return
      */
-	public static ElasticsearchResult prepareSearch(String index, String type,
+	public static SearchResult prepareSearch(String index, String type,
         List<QueryBuilder> queryBuilders, SortBuilder sort, int offset, int pagesize){
 
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -282,16 +287,16 @@ public class ElasticsearchUtil {
     	        .actionGet();
 
         // package result
-        ElasticsearchResult elasticsearchResult = new ElasticsearchResult();
-        elasticsearchResult.setTotalHits(searchResponse.getHits().getTotalHits());
+		SearchResult searchResult = new SearchResult();
+		searchResult.setTotal(searchResponse.getHits().getTotalHits());
         if (searchResponse.getHits().getHits()!=null && searchResponse.getHits().getHits().length>0) {
             List<Map<String, Object>> sources = new ArrayList<>();
             for (SearchHit item: searchResponse.getHits()) {
                 sources.add(item.getSource());
             }
-            elasticsearchResult.setSources(sources);
+			searchResult.setData(sources);
         }
-    	return elasticsearchResult;
+    	return searchResult;
     }
 
 	/**
@@ -362,10 +367,10 @@ public class ElasticsearchUtil {
 
         SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);
 
-        ElasticsearchResult searchResponse = prepareSearch(index, type, queryBuilders, sort, 0, 100);
+		SearchResult searchResponse = prepareSearch(index, type, queryBuilders, sort, 0, 100);
 
         System.out.println("---");
-		for (Map<String, Object> item: searchResponse.getSources()) {
+		for (Map<String, Object> item: searchResponse.getData()) {
 			System.out.println(item);
 		}
 	}
