@@ -2,7 +2,6 @@ package com.xxl.search.example.service.impl;
 
 import com.xxl.search.client.common.SearchResult;
 import com.xxl.search.client.es.ElasticsearchUtil;
-import com.xxl.search.client.es.JacksonUtil;
 import com.xxl.search.example.core.model.ShopDTO;
 import com.xxl.search.example.service.IXxlSearchService;
 import org.elasticsearch.action.index.IndexResponse;
@@ -37,9 +36,8 @@ public class ESSearchServiceImpl implements IXxlSearchService {
     @Override
     public boolean addDocument(ShopDTO shopDTO) {
         Map<String, Object> source = buildSource(shopDTO);
-        String sourceJson = JacksonUtil.writeValueAsString(source);
 
-        IndexResponse indexResponse = ElasticsearchUtil.prepareIndex(index, type, String.valueOf(shopDTO.getShopid()), sourceJson);
+        IndexResponse indexResponse = ElasticsearchUtil.prepareIndex(index, type, String.valueOf(shopDTO.getShopid()), source);
         return true;
     }
 
@@ -57,9 +55,8 @@ public class ESSearchServiceImpl implements IXxlSearchService {
     @Override
     public boolean updateDocument(ShopDTO shopDTO) {
         Map<String, Object> source = buildSource(shopDTO);
-        String sourceJson = JacksonUtil.writeValueAsString(source);
 
-        UpdateResponse updateResponse = ElasticsearchUtil.prepareUpdate(index, type, String.valueOf(shopDTO.getShopid()), sourceJson);
+        UpdateResponse updateResponse = ElasticsearchUtil.prepareUpdate(index, type, String.valueOf(shopDTO.getShopid()), source);
         return true;
     }
 

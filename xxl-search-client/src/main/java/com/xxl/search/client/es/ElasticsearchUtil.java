@@ -156,11 +156,11 @@ public class ElasticsearchUtil {
 	 * @param index
 	 * @param type
 	 * @param id
-	 * @param source_json
+	 * @param source
 	 * @return
 	 */
-	public static IndexResponse prepareIndex(String index, String type, @Nullable String id, String source_json){
-		IndexResponse response = getInstance().prepareIndex(index, type, id).setSource(source_json).get();
+	public static IndexResponse prepareIndex(String index, String type, @Nullable String id, Map source){
+		IndexResponse response = getInstance().prepareIndex(index, type, id).setSource(source).get();
 		return response;
 	}
 
@@ -170,11 +170,11 @@ public class ElasticsearchUtil {
 	 * @param index
 	 * @param type
 	 * @param id
-	 * @param doc_json
+	 * @param source
 	 * @return
 	 */
-	public static UpdateResponse prepareUpdate(String index, String type, String id, String doc_json) {
-		UpdateResponse response = getInstance().prepareUpdate(index, type, id).setDoc(doc_json).get();
+	public static UpdateResponse prepareUpdate(String index, String type, String id, Map source) {
+		UpdateResponse response = getInstance().prepareUpdate(index, type, id).setDoc(source).get();
 		return response;
 	}
 
@@ -331,8 +331,7 @@ public class ElasticsearchUtil {
             map.put("score", 5000+id);
             map.put("hotscore", 5000-id);
 
-			String source = JacksonUtil.writeValueAsString(map);
-			prepareIndex(index, type, id+"", source);
+			prepareIndex(index, type, id+"", map);
 		}
 
 		System.out.println(prepareGet(index, type, 1+"").getSource());
@@ -346,9 +345,8 @@ public class ElasticsearchUtil {
         map.put("group", Arrays.asList("group", "group2"));
         map.put("score", 5000+id);
         map.put("hotscore", 5000-id);
-		String source = JacksonUtil.writeValueAsString(map);
-        prepareIndex(index, type, id+"", source);
-		prepareUpdate(index, type, id+"", source);
+        prepareIndex(index, type, id+"", map);
+		prepareUpdate(index, type, id+"", map);
 
 		System.out.println(prepareGet(index, type, id+"").getSource());
 

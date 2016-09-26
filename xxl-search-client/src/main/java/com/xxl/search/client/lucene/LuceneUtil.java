@@ -290,6 +290,7 @@ public class LuceneUtil {
 			doc.add(new IntField("cityid", 1, Field.Store.YES));
 			doc.add(new TextField("shopname", "文章内容"+i, Field.Store.YES));
 			doc.add(new StringField("group", "group", Field.Store.YES));
+			doc.add(new StringField("group", "group2", Field.Store.YES));
 			doc.add(new IntField("score", 5000+i, INT_FIELD_TYPE_STORED_SORTED));
 			doc.add(new IntField("hotscore", 5000-i, INT_FIELD_TYPE_STORED_SORTED));
 			addDocument(doc, true);
